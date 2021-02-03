@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:insert="~{common :: headlink}"/>
+</head>
+<body>
+<div th:insert="~{common :: header}"/>
+
+<div th:switch="${user_role}">
+    <div th:case="'ADMIN'" th:insert="~{common :: admin_nav}"/>
+    <div th:case="'USER'" th:insert="~{common :: cabinet_nav}"/>
+    <div th:case="*" th:insert="~{common :: main_nav}"/>
+</div>
+
+<div class="container" style="align-content: center">
+    <h3 th:text="#{error.other.title}">Sorry, something went wrong there. Please try again.</h3>
+</div>
+</body>
+</html>

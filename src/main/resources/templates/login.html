@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:insert="~{common :: headlink}"/>
+</head>
+<body>
+    <div th:insert="~{common :: header}"/>
+    <div th:insert="~{common :: main_nav}"/>
+
+    <div style="color: red" th:if="${param.error}" th:text="#{login.login-error}"/>
+    <div th:if="${param.logout}" th:text="#{common.logout-message}"/>
+
+    <div class="container" style="width: 30%">
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="inputLogin" th:text="#{login.login}">Login</label>
+                <input type="text" class="form-control" id="inputLogin" name="username" th:attr="placeholder=#{login.login.placeholder}">
+            </div>
+            <div class="form-group">
+                <label for="inputPassword" th:text="#{login.password}">Password</label>
+                <input type="password" class="form-control" id="inputPassword" name="password" th:attr="placeholder=#{login.password.placeholder}">
+            </div>
+            <button type="submit" class="btn btn-primary" value="signIn" th:text="#{login.signIn}">Sign in</button>
+        </form>
+   </div>
+</body>
+</html>

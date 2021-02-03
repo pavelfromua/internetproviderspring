@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:insert="~{common :: headlink}"/>
+</head>
+<body>
+<div th:insert="~{common :: header}"/>
+<div th:insert="~{common :: admin_nav}"/>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col" th:text="#{list.users.login}">Login</th>
+        <th scope="col" th:text="#{list.users.name}">Name</th>
+        <th scope="col" th:text="#{list.users.email}">Email</th>
+        <th/>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user, custStat: ${users}">
+        <th scope="row" th:text="${custStat.count}">1</th>
+        <td><p th:text="${user.getLogin()}" /></td>
+        <td><p th:text="${user.getName()}" /></td>
+        <td><p th:text="${user.getEmail()}" /></td>
+        <td>
+            <div class="dropdown">
+            <a class="btn btn-secondary dropdown-toggle" th:text="#{list.users.actions}" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Actions
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" th:href="@{/users/{id}(id=${user.getId()})}" th:text="#{list.users.actions.show}">Show</a>
+                <a class="dropdown-item" th:href="@{/users/{id}/edit(id=${user.getId()})}" th:text="#{list.users.actions.edit}">Edit</a>
+                <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">
+                    <input class="dropdown-item" type="submit" th:value="#{list.users.actions.delete}"/>
+                </form>
+
+            </div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<form method="get" action="/users/new">
+    <button type="submit" class="btn btn-primary" th:text="#{list.users.create}">Create new user</button>
+</form>
+
+</body>
+</html>

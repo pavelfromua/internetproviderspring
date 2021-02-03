@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:insert="~{common :: headlink}"/>
+</head>
+<body>
+<div th:insert="~{common :: header}"/>
+
+<div th:switch="${user_role}">
+    <div th:case="'ADMIN'" th:insert="~{common :: admin_nav}"/>
+    <div th:case="'USER'" th:insert="~{common :: cabinet_nav}"/>
+    <div th:case="*" th:insert="~{common :: main_nav}"/>
+</div>
+
+<table width="100%">
+    <tr>
+        <td width="60%">
+            <table class="table">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col" colspan="2">About user</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td width="100px">Id</td>
+                    <td th:text="${user.getId()}">Id</td>
+                </tr>
+                <tr>
+                    <td width="100px">Login</td>
+                    <td th:text="${user.getName()}">Login</td>
+                </tr>
+                <tr>
+                    <td width="100px">Email</td>
+                    <td th:text="${user.getEmail()}">Email</td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+
+
+<!--<a th:href="@{/users/{id}/edit(id=${user.getId()})}">Edit</a>-->
+
+<!--<form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">-->
+<!--    <input type="submit" value="Delete"/>-->
+<!--</form>-->
+</body>
+</html>
