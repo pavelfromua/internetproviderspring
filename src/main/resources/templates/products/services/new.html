@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:insert="~{common :: headlink}"/>
+</head>
+<body>
+<div th:insert="~{common :: header}"/>
+<div th:insert="~{common :: admin_nav}"/>
+
+<div class="container" style="width: 50%">
+    <form th:method="POST" th:action="@{/products/services}" th:object="${service}">
+        <div class="form-group">
+            <label for="name" th:text="#{new.product.service.name}">Enter name: </label>
+            <input type="text" class="form-control" th:field="*{name}" id="name" />
+            <th:block th:if="${#fields.hasErrors('name')}" th:each="err: ${#fields.errors('name')}">
+                <div style="color: red" th:utext="#{${err}}">Name error</div>
+            </th:block>
+        </div>
+        <button type="submit" class="btn btn-primary" value="signIn" th:text="#{new.product.service.create}">Create</button>
+    </form>
+</div>
+</body>
+</html>

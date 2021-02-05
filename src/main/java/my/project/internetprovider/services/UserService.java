@@ -1,5 +1,6 @@
 package my.project.internetprovider.services;
 
+import my.project.internetprovider.models.Account;
 import my.project.internetprovider.models.ProviderUser;
 import my.project.internetprovider.models.Role;
 import my.project.internetprovider.repositories.UserRepository;
@@ -47,6 +48,7 @@ public class UserService {
                 .setPassword(user.getPassword())
                 .setActive(true)
                 .setRoles(Collections.singleton(role))
+                .setAccount(Account.newBuilder().setActive(true).build())
                 .build();
 
         userRepository.save(providerUser);

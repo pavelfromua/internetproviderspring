@@ -27,9 +27,9 @@ public class MainController {
         String role = userService.getCurrentRole(principal.getName());
 
         if ("ADMIN".equals(role))
-            return "redirect:/admin";
+            return "redirect:/admin/";
         else if ("USER".equals(role))
-            return "redirect:/cabinet";
+            return "redirect:/cabinet/";
 
         return "index";
     }

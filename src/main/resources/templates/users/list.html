@@ -24,7 +24,7 @@
         <td><p th:text="${user.getLogin()}" /></td>
         <td><p th:text="${user.getName()}" /></td>
         <td><p th:text="${user.getEmail()}" /></td>
-        <td>
+        <td align="right">
             <div class="dropdown">
             <a class="btn btn-secondary dropdown-toggle" th:text="#{list.users.actions}" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Actions
@@ -32,7 +32,7 @@
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <a class="dropdown-item" th:href="@{/users/{id}(id=${user.getId()})}" th:text="#{list.users.actions.show}">Show</a>
-                <a class="dropdown-item" th:href="@{/users/{id}/edit(id=${user.getId()})}" th:text="#{list.users.actions.edit}">Edit</a>
+<!--                <a class="dropdown-item" th:href="@{/users/{id}/edit(id=${user.getId()})}" th:text="#{list.users.actions.edit}">Edit</a>-->
                 <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">
                     <input class="dropdown-item" type="submit" th:value="#{list.users.actions.delete}"/>
                 </form>
@@ -43,10 +43,5 @@
     </tr>
     </tbody>
 </table>
-
-<form method="get" action="/users/new">
-    <button type="submit" class="btn btn-primary" th:text="#{list.users.create}">Create new user</button>
-</form>
-
 </body>
 </html>

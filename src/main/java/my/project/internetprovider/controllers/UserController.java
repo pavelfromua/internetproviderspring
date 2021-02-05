@@ -2,6 +2,9 @@ package my.project.internetprovider.controllers;
 
 import my.project.internetprovider.models.Role;
 import my.project.internetprovider.models.ProviderUser;
+import my.project.internetprovider.services.AccountService;
+import my.project.internetprovider.services.ProviderServiceService;
+import my.project.internetprovider.services.RateService;
 import my.project.internetprovider.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,10 +28,16 @@ import java.security.Principal;
 //@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
     private final UserService userService;
+    private final AccountService accountService;
+    private final ProviderServiceService providerServiceService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService,
+                          AccountService accountService,
+                          ProviderServiceService providerServiceService) {
         this.userService = userService;
+        this.accountService = accountService;
+        this.providerServiceService = providerServiceService;
     }
 
     @GetMapping()
@@ -40,8 +49,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
+    public String show(@PathVariable("id") Long id, Model model, Principal principal) {
+        ProviderUser user = userService.getUserById(id);
+
+        model.addAttribute("user", user);
+        model.addAttribute("user_role", userService.getCurrentRole(principal.getName()));
+        model.addAttribute("account", accountService.getAccount(user.getAccount()));
+        model.addAttribute("services", providerServiceService.getServices());
 
         return "users/show";
     }
@@ -52,6 +66,7 @@ public class UserController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String create(@ModelAttribute("user") @Valid ProviderUser user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "users/new";
@@ -79,6 +94,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String update(@ModelAttribute("user") @Valid ProviderUser user,
                          BindingResult bindingResult, @PathVariable("id") Long id) {
         if (bindingResult.hasErrors())
@@ -89,9 +105,18 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String delete(@PathVariable("id") Long id) {
         userService.deleteUser(id);
 
         return "redirect:/users";
+    }
+
+    @GetMapping("/{id}/rate")
+    public String rateAction(Model model, @PathVariable("id") Long id, Principal principal) {
+        //model.addAttribute("user", userService.getUserById(id));
+        //model.addAttribute("user_role", userService.getCurrentRole(principal.getName()));
+
+        return "users/edit";
     }
 }

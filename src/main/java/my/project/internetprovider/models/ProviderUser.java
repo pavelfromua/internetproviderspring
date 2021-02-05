@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -25,7 +27,8 @@ import java.util.Set;
 @Table(name = "users")
 public class ProviderUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator( name = "jpaUserSequence", sequenceName = "JPA_USERS_SEQUENCE", allocationSize = 1, initialValue = 1 )
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "jpaUserSequence")
     private Long id;
 
     @NotEmpty(message = "new.user.login.notEmpty")
@@ -46,13 +49,22 @@ public class ProviderUser {
 
     private boolean active;
 
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="account_id")
+    private Account account;
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Payment> payments = new ArrayList<>();
 
     private ProviderUser() {}
 
@@ -157,6 +169,12 @@ public class ProviderUser {
 
         public Builder setRoles(Set<Role> roles) {
             ProviderUser.this.roles = roles;
+
+            return this;
+        }
+
+        public Builder setAccount(Account account) {
+            ProviderUser.this.account = account;
 
             return this;
         }

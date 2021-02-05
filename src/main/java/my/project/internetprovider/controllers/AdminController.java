@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController {
     @GetMapping()
     public String index(Model model) {
-        return "admin";
+        return "redirect:/users";
     }
 }

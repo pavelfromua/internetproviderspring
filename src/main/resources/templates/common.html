@@ -58,11 +58,27 @@
             </button>
             <div class="collapse navbar-collapse" id="adminNav">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item" active>
-                        <a class="nav-link" href="/products" th:text="#{admin.nav.products}">Products</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" th:text="#{admin.nav.products}" href="#" id="navbarDropdownProducts" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Products
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownProducts">
+                            <a class="dropdown-item" th:href="@{/products/services/new}" th:text="#{admin.nav.products.services.new}">New service</a>
+                            <a class="dropdown-item" th:href="@{/products/rates/new}" th:text="#{admin.nav.products.rates.new}">New rate</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" th:href="@{/products/services}" th:text="#{admin.nav.products.services.show}">Show services</a>
+                            <a class="dropdown-item" th:href="@{/products/rates}" th:text="#{admin.nav.products.rates.show}">Show rates</a>
+                        </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/users" th:text="#{admin.nav.users}">Users</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" th:text="#{admin.nav.users}" href="#" id="navbarDropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Users
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownUsers">
+                            <a class="dropdown-item" th:href="@{/users/new}" th:text="#{admin.nav.users.new}">New user</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" th:href="@{/users}" th:text="#{admin.nav.users.show}">Show users</a>
+                        </div>
                     </li>
                 </ul>
             </div>
