@@ -9,33 +9,33 @@
 <div th:insert="~{common :: admin_nav}"/>
 
 <div class="container" style="width: 50%">
-    <form th:method="POST" th:action="@{/products/rates}" th:object="${rate}">
+    <form th:method="POST" th:action="@{/items/plans}" th:object="${plan}">
         <div class="form-group">
-            <label for="name" th:text="#{new.product.rate.name}">Enter name: </label>
+            <label for="name" th:text="#{new.item.plan.name}">Enter name: </label>
             <input type="text" class="form-control" th:field="*{name}" id="name" />
             <th:block th:if="${#fields.hasErrors('name')}" th:each="err: ${#fields.errors('name')}">
                 <div style="color: red" th:utext="#{${err}}">Name error</div>
             </th:block>
         </div>
         <div class="form-group">
-            <label for="name" th:text="#{new.product.rate.price}">Enter price: </label>
+            <label for="name" th:text="#{new.item.plan.price}">Enter price: </label>
             <input type="number" min="0.01" step="0.01" class="form-control" th:field="*{price}" id="price" />
             <th:block th:if="${#fields.hasErrors('price')}" th:each="err: ${#fields.errors('price')}">
                 <div style="color: red" th:utext="#{${err}}">Price error</div>
             </th:block>
         </div>
         <div class="form-group">
-            <label for="name" th:text="#{new.product.rate.service}">Select service: </label>
-            <select class="form-control" id="parts" name="parts" th:field="*{service}" >
-                <option th:each="item : ${serviceList}"
-                        th:value="${item.getId()}"
-                        th:text="${item.getName()}">Part name</option>
+            <label for="name" th:text="#{new.item.plan.product}">Select service: </label>
+            <select class="form-control" id="parts" name="parts" th:field="*{product}" >
+                <option th:each="item : ${products}"
+                        th:value="${item.id}"
+                        th:text="${item.name}">Part name</option>
             </select>
-            <th:block th:if="${#fields.hasErrors('service')}" th:each="err: ${#fields.errors('service')}">
+            <th:block th:if="${#fields.hasErrors('product')}" th:each="err: ${#fields.errors('product')}">
                 <div style="color: red" th:utext="#{${err}}">Service error</div>
             </th:block>
         </div>
-        <button type="submit" class="btn btn-primary" value="signIn" th:text="#{new.product.rate.create}">Create</button>
+        <button type="submit" class="btn btn-primary" value="signIn" th:text="#{new.item.plan.create}">Create</button>
     </form>
 </div>
 </body>

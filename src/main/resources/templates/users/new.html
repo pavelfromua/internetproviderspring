@@ -12,8 +12,8 @@
     <form th:method="POST" th:action="@{/users}" th:object="${user}">
         <div class="form-group">
             <label for="login" th:text="#{new.user.login}">Enter login: </label>
-            <input type="text" class="form-control" th:field="*{login}" id="login" />
-            <th:block th:if="${#fields.hasErrors('login')}" th:each="err: ${#fields.errors('login')}">
+            <input type="text" class="form-control" th:field="*{username}" id="login" />
+            <th:block th:if="${#fields.hasErrors('username')}" th:each="err: ${#fields.errors('username')}">
                 <div style="color: red" th:utext="#{${err}}">Login error</div>
             </th:block>
         </div>

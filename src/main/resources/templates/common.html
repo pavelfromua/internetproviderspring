@@ -32,7 +32,7 @@
                         <a class="nav-link" href="/"><span class="sr-only" th:text="#{main.nav.home}">Home</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" th:text="#{main.nav.products}">Products</a>
+                        <a class="nav-link" href="/items/plans" th:text="#{main.nav.items}">Products</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/login" th:text="#{main.nav.cabinet}">Cabinet</a>
@@ -59,15 +59,15 @@
             <div class="collapse navbar-collapse" id="adminNav">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" th:text="#{admin.nav.products}" href="#" id="navbarDropdownProducts" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" th:text="#{admin.nav.items}" href="#" id="navbarDropdownProducts" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Products
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownProducts">
-                            <a class="dropdown-item" th:href="@{/products/services/new}" th:text="#{admin.nav.products.services.new}">New service</a>
-                            <a class="dropdown-item" th:href="@{/products/rates/new}" th:text="#{admin.nav.products.rates.new}">New rate</a>
+                            <a class="dropdown-item" th:href="@{/items/products/new}" th:text="#{admin.nav.items.products.new}">New service</a>
+                            <a class="dropdown-item" th:href="@{/items/plans/new}" th:text="#{admin.nav.items.plans.new}">New plan</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" th:href="@{/products/services}" th:text="#{admin.nav.products.services.show}">Show services</a>
-                            <a class="dropdown-item" th:href="@{/products/rates}" th:text="#{admin.nav.products.rates.show}">Show rates</a>
+                            <a class="dropdown-item" th:href="@{/items/products}" th:text="#{admin.nav.items.products.show}">Show services</a>
+                            <a class="dropdown-item" th:href="@{/items/plans}" th:text="#{admin.nav.items.plans.show}">Show plans</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -98,7 +98,10 @@
             <div class="collapse navbar-collapse" id="cabinetNav">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/cabinet/userinfo" th:text="#{cabinet.nav.user}">User info</a>
+                        <a class="nav-link" href="/items/plans" th:text="#{cabinet.nav.items}">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/cabinet" th:text="#{cabinet.nav.user}">User info</a>
                     </li>
                 </ul>
             </div>

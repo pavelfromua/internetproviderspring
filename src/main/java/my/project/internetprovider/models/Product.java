@@ -2,34 +2,30 @@ package my.project.internetprovider.models;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "services")
-public class ProviderService {
+@Table(name = "products")
+public class Product {
     @Id
-    @SequenceGenerator( name = "jpaServiceSequence", sequenceName = "JPA_SERVICES_SEQUENCE", allocationSize = 1, initialValue = 1 )
-    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "jpaServiceSequence")
+    @SequenceGenerator( name = "jpaProductSequence", sequenceName = "JPA_PRODUCTS_SEQUENCE", allocationSize = 1, initialValue = 1 )
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "jpaProductSequence")
     private Long id;
 
-    @NotEmpty(message = "new.product.service.name.notEmpty")
-    @Size(min = 2, max = 120, message = "new.product.service.name.size")
+    @NotEmpty(message = "new.item.product.name.notEmpty")
+    @Size(min = 2, max = 120, message = "new.item.product.name.size")
     private String name;
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Rate> rates;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Plan> plans;
 
     public Long getId() {
         return id;
@@ -47,16 +43,16 @@ public class ProviderService {
         this.name = name;
     }
 
-    public Set<Rate> getRates() {
-        return rates;
+    public Set<Plan> getPlans() {
+        return plans;
     }
 
-    public void setRates(Set<Rate> rates) {
-        this.rates = rates;
+    public void setPlans(Set<Plan> plans) {
+        this.plans = plans;
     }
 
     @Override
     public String toString() {
-        return name.toString();
+        return name;
     }
 }

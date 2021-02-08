@@ -10,8 +10,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,13 +21,13 @@ public class Account {
     Long id;
 
     @OneToOne(mappedBy = "account")
-    ProviderUser user;
+    User user;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Payment> payments;
 
     @ManyToMany
-    Set<Rate> rates;
+    Set<Plan> plans;
 
     private boolean active;
 
@@ -41,11 +39,11 @@ public class Account {
         this.id = id;
     }
 
-    public ProviderUser getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(ProviderUser user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -57,12 +55,12 @@ public class Account {
         this.payments = payments;
     }
 
-    public Set<Rate> getRates() {
-        return rates;
+    public Set<Plan> getPlans() {
+        return plans;
     }
 
-    public void setRates(Set<Rate> rates) {
-        this.rates = rates;
+    public void setPlans(Set<Plan> plans) {
+        this.plans = plans;
     }
 
     public boolean isActive() {
@@ -86,7 +84,7 @@ public class Account {
             return this;
         }
 
-        public Builder setUser(ProviderUser user) {
+        public Builder setUser(User user) {
             Account.this.user = user;
 
             return this;
@@ -98,8 +96,8 @@ public class Account {
             return this;
         }
 
-        public Builder setRates(Set<Rate> rates) {
-            Account.this.rates = rates;
+        public Builder setPlans(Set<Plan> plans) {
+            Account.this.plans = plans;
 
             return this;
         }

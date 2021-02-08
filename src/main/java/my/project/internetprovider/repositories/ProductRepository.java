@@ -1,9 +1,9 @@
 package my.project.internetprovider.repositories;
 
-import my.project.internetprovider.models.ProviderService;
+import my.project.internetprovider.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProviderServiceRepository extends JpaRepository<ProviderService, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 }

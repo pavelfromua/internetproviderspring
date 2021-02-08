@@ -21,9 +21,9 @@
     <tbody>
     <tr th:each="user, custStat: ${users}">
         <th scope="row" th:text="${custStat.count}">1</th>
-        <td><p th:text="${user.getLogin()}" /></td>
-        <td><p th:text="${user.getName()}" /></td>
-        <td><p th:text="${user.getEmail()}" /></td>
+        <td><p th:text="${user.username}" /></td>
+        <td><p th:text="${user.name}" /></td>
+        <td><p th:text="${user.email}" /></td>
         <td align="right">
             <div class="dropdown">
             <a class="btn btn-secondary dropdown-toggle" th:text="#{list.users.actions}" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -31,9 +31,8 @@
             </a>
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" th:href="@{/users/{id}(id=${user.getId()})}" th:text="#{list.users.actions.show}">Show</a>
-<!--                <a class="dropdown-item" th:href="@{/users/{id}/edit(id=${user.getId()})}" th:text="#{list.users.actions.edit}">Edit</a>-->
-                <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">
+                <a class="dropdown-item" th:href="@{/users/{id}(id=${user.id})}" th:text="#{list.users.actions.show}">Show</a>
+                <form th:method="DELETE" th:action="@{/users/{id}(id=${user.id})}">
                     <input class="dropdown-item" type="submit" th:value="#{list.users.actions.delete}"/>
                 </form>
 

@@ -1,13 +1,10 @@
 package my.project.internetprovider.controllers;
 
-import my.project.internetprovider.models.Role;
-import my.project.internetprovider.models.ProviderUser;
-import my.project.internetprovider.services.AccountService;
-import my.project.internetprovider.services.ProviderServiceService;
-import my.project.internetprovider.services.RateService;
+import my.project.internetprovider.models.User;
 import my.project.internetprovider.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.security.Principal;
 
@@ -28,16 +26,10 @@ import java.security.Principal;
 //@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
     private final UserService userService;
-    private final AccountService accountService;
-    private final ProviderServiceService providerServiceService;
 
     @Autowired
-    public UserController(UserService userService,
-                          AccountService accountService,
-                          ProviderServiceService providerServiceService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.accountService = accountService;
-        this.providerServiceService = providerServiceService;
     }
 
     @GetMapping()
@@ -49,59 +41,68 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") Long id, Model model, Principal principal) {
-        ProviderUser user = userService.getUserById(id);
+    public String showCabinet(Model model, @PathVariable("id") Long id,
+                              @AuthenticationPrincipal User authUser) {
+        String userRole = userService.getRoleForUser(authUser);
 
-        model.addAttribute("user", user);
-        model.addAttribute("user_role", userService.getCurrentRole(principal.getName()));
-        model.addAttribute("account", accountService.getAccount(user.getAccount()));
-        model.addAttribute("services", providerServiceService.getServices());
+        if (!"ROLE_ADMIN".equals(userRole) && id != authUser.getId())
+            return "errors/403";
+
+        model.addAllAttributes(userService.getDataForUserCabinet(id));
+        model.addAttribute("user_role", userRole);
 
         return "users/show";
     }
 
+    @GetMapping("/cabinet")
+    public String goToCabinet(@AuthenticationPrincipal User authUser) {
+        if (!"ROLE_ADMIN".equals(userService.getRoleForUser(authUser)))
+            return "redirect:/users/" + authUser.getId();
+
+        return "users/list";
+    }
+
     @GetMapping("/new")
-    public String newUser(@ModelAttribute("user") ProviderUser user) {
+    public String newUser(Model model) {
+        model.addAttribute("user", new User());
+
         return "/users/new";
     }
 
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String create(@ModelAttribute("user") @Valid ProviderUser user, BindingResult bindingResult) {
+    public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "users/new";
         }
 
-        try {
-            userService.addNewUser(user, Role.USER);
-        } catch (IllegalStateException e) {
-            FieldError fieldError = new FieldError("user","login","new.user.login.isTaken");
+        if (!userService.saveUser(user)) {
+            FieldError fieldError = new FieldError("user","username","new.user.login.isTaken");
             bindingResult.addError(fieldError);
-        }
 
-        if (bindingResult.hasErrors())
             return "users/new";
+        }
 
         return "redirect:/users";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") Long id, Principal principal) {
-        model.addAttribute("user", userService.getUserById(id));
-        model.addAttribute("user_role", userService.getCurrentRole(principal.getName()));
+    @PostMapping("/edit")
+    public String edit(Model model, @ModelAttribute("user") @Valid User user,
+                       @AuthenticationPrincipal User authUser) {
+        model.addAttribute("user", user);
+        model.addAttribute("user_role", userService.getRoleForUser(authUser));
 
         return "users/edit";
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String update(@ModelAttribute("user") @Valid ProviderUser user,
-                         BindingResult bindingResult, @PathVariable("id") Long id) {
+    public String update(@ModelAttribute("user") @Valid User user,
+                         BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "users/edit";
 
-        userService.updateUser(user, id);
-        return "redirect:/users";
+        userService.updateUser(user);
+        return "redirect:/users/" + user.getId();
     }
 
     @DeleteMapping("/{id}")
@@ -110,13 +111,5 @@ public class UserController {
         userService.deleteUser(id);
 
         return "redirect:/users";
-    }
-
-    @GetMapping("/{id}/rate")
-    public String rateAction(Model model, @PathVariable("id") Long id, Principal principal) {
-        //model.addAttribute("user", userService.getUserById(id));
-        //model.addAttribute("user_role", userService.getCurrentRole(principal.getName()));
-
-        return "users/edit";
     }
 }

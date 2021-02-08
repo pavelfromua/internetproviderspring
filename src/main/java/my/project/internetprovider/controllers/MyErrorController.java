@@ -13,20 +13,21 @@ import java.security.Principal;
 
 @Controller
 public class MyErrorController implements ErrorController {
-    private final UserService userService;
+    //private final UserService userService;
 
-    @Autowired
-    public MyErrorController(UserService userService) {
-        this.userService = userService;
-    }
+//    @Autowired
+//    public MyErrorController(UserService userService) {
+//        this.userService = userService;
+//    }
 
     @RequestMapping("/error")
-    public String handleError(HttpServletRequest request, Model model, Principal principal) {
+    //public String handleError(HttpServletRequest request, Model model, Principal principal) {
+    public String handleError(HttpServletRequest request, Principal principal) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         if (status == null || principal == null)
             return "error";
 
-        model.addAttribute("user_role", userService.getCurrentRole(principal.getName()));
+        //model.addAttribute("user_role", userService.getCurrentRole(principal.getName()));
 
         Integer statusCode = Integer.valueOf(status.toString());
 

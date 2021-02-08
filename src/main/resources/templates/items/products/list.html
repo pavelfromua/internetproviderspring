@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:insert="~{common :: headlink}"/>
+</head>
+<body>
+<div th:insert="~{common :: header}"/>
+<div th:switch="${user_role}">
+    <div th:case="'ROLE_ADMIN'" th:insert="~{common :: admin_nav}"/>
+    <div th:case="'ROLE_USER'" th:insert="~{common :: cabinet_nav}"/>
+    <div th:case="*" th:insert="~{common :: main_nav}"/>
+</div>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col" th:text="#{list.users.name}">Name</th>
+        <th scope="col"/>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product, custStat: ${products}">
+        <th scope="row" th:text="${custStat.count}">1</th>
+        <td><p th:text="${product.name}" /></td>
+        <td align="right">
+            <div class="dropdown">
+            <a class="btn btn-secondary dropdown-toggle" th:text="#{list.items.products.actions}" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Actions
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" th:href="@{/items/products/{id}/edit(id=${product.id})}" th:text="#{list.items.products.actions.edit}">Edit</a>
+                <form th:method="DELETE" th:action="@{/items/products/{id}(id=${product.id})}">
+                    <input class="dropdown-item" type="submit" th:value="#{list.items.products.actions.delete}"/>
+                </form>
+            </div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

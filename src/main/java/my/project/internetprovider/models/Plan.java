@@ -1,9 +1,5 @@
 package my.project.internetprovider.models;
 
-import my.project.internetprovider.repositories.ProviderServiceRepository;
-import my.project.internetprovider.repositories.RateRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,26 +11,25 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "rates")
-public class Rate {
+@Table(name = "plans")
+public class Plan {
     @Id
-    @SequenceGenerator( name = "jpaRateSequence", sequenceName = "JPA_RATES_SEQUENCE", allocationSize = 1, initialValue = 1 )
-    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "jpaRateSequence")
+    @SequenceGenerator( name = "jpaPlanSequence", sequenceName = "JPA_PLANS_SEQUENCE", allocationSize = 1, initialValue = 1 )
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "jpaPlanSequence")
     private Long id;
 
-    @NotEmpty(message = "new.product.rate.name.notEmpty")
-    @Size(min = 2, max = 120, message = "new.product.rate.name.size")
+    @NotEmpty(message = "new.item.plan.name.notEmpty")
+    @Size(min = 2, max = 120, message = "new.item.plan.name.size")
     private String name;
 
-    @NotNull(message = "new.product.rate.price.notEmpty")
+    @NotNull(message = "new.item.plan.price.notEmpty")
     private Double price;
 
     @ManyToOne
-    private ProviderService service;
+    private Product product;
 
     @ManyToMany
     private Set<Account> accounts;
@@ -63,12 +58,12 @@ public class Rate {
         this.price = price;
     }
 
-    public ProviderService getService() {
-        return service;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setService(ProviderService service) {
-        this.service = service;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Set<Account> getAccounts() {
@@ -77,5 +72,10 @@ public class Rate {
 
     public void setAccounts(Set<Account> accounts) {
         this.accounts = accounts;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

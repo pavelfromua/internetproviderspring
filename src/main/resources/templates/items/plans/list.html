@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:insert="~{common :: headlink}"/>
+</head>
+<body>
+<div th:insert="~{common :: header}"/>
+<div th:switch="${user_role}">
+    <div th:case="'ROLE_ADMIN'" th:insert="~{common :: admin_nav}"/>
+    <div th:case="'ROLE_USER'" th:insert="~{common :: cabinet_nav}"/>
+    <div th:case="*" th:insert="~{common :: main_nav}"/>
+</div>
+
+
+<select name="pid" class="custom-select" onchange="top.location=this.value" th:field="*{products}">
+    <option value="none" hidden="" th:text="#{list.items.plans.filter.product}">Filter by product</option>
+    <option selected th:value="@{/items/plans}" th:text="#{list.items.plans.filter.product.all}">All</option>
+    <option th:each="item : ${products}" th:text="${item.name}" th:value="@{|/items/plans/pid/${item.id}|}" />
+</select>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col" th:text="#{list.items.plans.product}">Service</th>
+        <th scope="col" th:text="#{list.items.plans.name}">Plan</th>
+        <th scope="col" th:text="#{list.items.plans.price}">Price</th>
+        <th scope="col"/>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="plan, custStat: ${plans}">
+        <th scope="row" th:text="${custStat.count}">1</th>
+        <td><p th:text="${plan.product}" /></td>
+        <td><p th:text="${plan.name}" /></td>
+        <td><p th:text="${plan.price}" /></td>
+        <td align="right" th:if="${user_role == 'ROLE_ADMIN'}">
+            <div class="dropdown">
+                <a class="btn btn-secondary dropdown-toggle" th:text="#{list.items.plans.actions}" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Actions
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" th:href="@{/items/plans/{id}/edit(id=${plan.id})}" th:text="#{list.items.plans.actions.edit}">Edit</a>
+                    <form th:method="DELETE" th:action="@{/items/plans/{id}(id=${plan.id})}">
+                        <input class="dropdown-item" type="submit" th:value="#{list.items.plans.actions.delete}"/>
+                    </form>
+                </div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

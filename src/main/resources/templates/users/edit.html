@@ -8,17 +8,17 @@
 
 <div th:insert="~{common :: header}"/>
 <div th:switch="${user_role}">
-    <div th:case="'ADMIN'" th:insert="~{common :: admin_nav}"/>
-    <div th:case="'USER'" th:insert="~{common :: cabinet_nav}"/>
+    <div th:case="'ROLE_ADMIN'" th:insert="~{common :: admin_nav}"/>
+    <div th:case="'ROLE_USER'" th:insert="~{common :: cabinet_nav}"/>
     <div th:case="*" th:insert="~{common :: main_nav}"/>
 </div>
 
 <div class="container" style="width: 50%">
-    <form th:method="PATCH" th:action="@{/users/{id}(id=${user.getId()})}" th:object="${user}">
+    <form th:method="PATCH" th:action="@{/users/{id}(id=${user.id})}" th:object="${user}">
         <div class="form-group">
             <label for="login" th:text="#{edit.user.login}">Login: </label>
-            <input type="text"  readonly class="form-control" th:field="*{login}" id="login" />
-            <th:block th:if="${#fields.hasErrors('login')}" th:each="err: ${#fields.errors('login')}">
+            <input type="text"  readonly class="form-control" th:field="*{username}" id="login" />
+            <th:block th:if="${#fields.hasErrors('username')}" th:each="err: ${#fields.errors('username')}">
                 <div style="color: red" th:utext="#{${err}}">Login error</div>
             </th:block>
         </div>
@@ -43,6 +43,7 @@
                 <div style="color: red" th:utext="#{${err}}">Password error</div>
             </th:block>
         </div>
+        <input type="hidden" name="id" th:field="*{id}">
         <button type="submit" class="btn btn-primary" value="signIn" th:text="#{edit.user.edit}">Edit</button>
     </form>
 </div>

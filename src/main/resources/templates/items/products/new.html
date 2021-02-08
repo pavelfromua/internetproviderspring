@@ -9,15 +9,15 @@
 <div th:insert="~{common :: admin_nav}"/>
 
 <div class="container" style="width: 50%">
-    <form th:method="POST" th:action="@{/products/services}" th:object="${service}">
+    <form th:method="POST" th:action="@{/items/products}" th:object="${product}">
         <div class="form-group">
-            <label for="name" th:text="#{new.product.service.name}">Enter name: </label>
+            <label for="name" th:text="#{new.item.product.name}">Enter name: </label>
             <input type="text" class="form-control" th:field="*{name}" id="name" />
             <th:block th:if="${#fields.hasErrors('name')}" th:each="err: ${#fields.errors('name')}">
                 <div style="color: red" th:utext="#{${err}}">Name error</div>
             </th:block>
         </div>
-        <button type="submit" class="btn btn-primary" value="signIn" th:text="#{new.product.service.create}">Create</button>
+        <button type="submit" class="btn btn-primary" value="signIn" th:text="#{new.item.product.create}">Create</button>
     </form>
 </div>
 </body>

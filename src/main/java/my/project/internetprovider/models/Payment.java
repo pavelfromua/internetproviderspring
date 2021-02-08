@@ -8,6 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "payments")
@@ -69,5 +70,53 @@ public class Payment {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public static Builder newBuilder() {
+        return new Payment().new Builder();
+    }
+
+    public class Builder {
+        private Builder() {}
+
+        public Builder setId(Long id) {
+            Payment.this.id = id;
+
+            return this;
+        }
+
+        public Builder setName(String name) {
+            Payment.this.name = name;
+
+            return this;
+        }
+
+        public Builder setAmount(Double amount) {
+            Payment.this.amount = amount;
+
+            return this;
+        }
+
+        public Builder setDate(LocalDateTime date) {
+            Payment.this.date = date;
+
+            return this;
+        }
+
+        public Builder setFd(FlowDirection fd) {
+            Payment.this.fd = fd;
+
+            return this;
+        }
+
+        public Builder setAccount(Account account) {
+            Payment.this.account = account;
+
+            return this;
+        }
+
+        public Payment build() {
+            return Payment.this;
+        }
     }
 }

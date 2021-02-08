@@ -1,9 +1,12 @@
 package my.project.internetprovider.services;
 
+import my.project.internetprovider.models.Account;
 import my.project.internetprovider.models.Role;
-import my.project.internetprovider.models.ProviderUser;
+import my.project.internetprovider.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 public class InstallService {
@@ -23,14 +26,15 @@ public class InstallService {
             //throw new IllegalStateException("Database initialization has been done");
             return;
 
-        ProviderUser providerUser = ProviderUser.newBuilder()
-                .setLogin("admin")
+        User user = User.newBuilder()
+                .setUsername("admin")
                 .setName("administrator")
                 .setEmail("admin@final.pr")
                 .setPassword("111")
-                .setActive(true)
+                .setRoles(Collections.singleton(new Role(1L, "ROLE_ADMIN")))
+                .setAccount(Account.newBuilder().setActive(true).build())
                 .build();
 
-        userService.addNewUser(providerUser, Role.ADMIN);
+        userService.saveUser(user);
     }
 }
