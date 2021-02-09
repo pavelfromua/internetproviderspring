@@ -5,7 +5,9 @@ import my.project.internetprovider.models.User;
 import my.project.internetprovider.services.PlanService;
 import my.project.internetprovider.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 import java.awt.print.Pageable;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/items")
@@ -36,7 +40,32 @@ public class PlanController {
 
     @GetMapping("/plans")
     public String index(Model model, @AuthenticationPrincipal User authUser) {
-        model.addAllAttributes(planService.getDataForListOfPlans());
+        return listByPage(model, 1, "price", "asc", authUser);
+    }
+
+    @GetMapping("/plans/page/{pageNumber}")
+    public String listByPage(Model model,
+                             @PathVariable("pageNumber") int currentPage,
+                             @Param("sf") String sf,
+                             @Param("sd") String sd,
+                             @AuthenticationPrincipal User authUser) {
+        Map<String, ?> planPageData = planService.getDataForListOfPlans(currentPage, sf, sd);
+
+        Page<Plan> page = (Page<Plan>) planPageData.get("planPage");
+        long totalItems = page.getTotalElements();
+        int totalPages = page.getTotalPages();
+
+        List<Plan> planList = page.getContent();
+        String rsd = "asc".equals(sd) ? "desc" : "asc";
+
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
+        model.addAttribute("sf", sf);
+        model.addAttribute("sd", sd);
+        model.addAttribute("rsd", rsd);
+        model.addAttribute("plans", planList);
+        model.addAttribute("products", planPageData.get("products"));
         model.addAttribute("user_role", userService.getRoleForUser(authUser));
 
         return "items/plans/list";

@@ -7,7 +7,9 @@ import my.project.internetprovider.repositories.ProductRepository;
 import my.project.internetprovider.repositories.PlanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +34,12 @@ public class PlanService {
         planRepository.save(plan);
     }
 
-    public List<Plan> getPlans() {
-        return planRepository.findAll();
+    public Page<Plan> getPlans(int pageNumber, String sortField, String sortDir) {
+        Sort sort = Sort.by(sortField);
+        sort = "asc".equals(sortDir) ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(pageNumber - 1, 2, sort);
+
+        return planRepository.findAll(pageable);
     }
 
     public Plan getPlanById(Long id) {
@@ -79,13 +85,13 @@ public class PlanService {
     }
 
     @Transactional
-    public Map<String, ?> getDataForListOfPlans() {
-        Map<String, Object> modelAttributes = new HashMap<>();
+    public Map<String, ?> getDataForListOfPlans(int currentPage, String sortField, String sortDir) {
+        Map<String, Object> planPageData = new HashMap<>();
 
-        modelAttributes.put("products", getProducts());
-        modelAttributes.put("plans", getPlans());
+        planPageData.put("products", getProducts());
+        planPageData.put("planPage", getPlans(currentPage, sortField, sortDir));
 
-        return modelAttributes;
+        return planPageData;
     }
 
     @Transactional

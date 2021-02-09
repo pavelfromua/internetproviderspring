@@ -23,9 +23,21 @@
     <thead>
     <tr>
         <th scope="col">#</th>
-        <th scope="col" th:text="#{list.items.plans.product}">Service</th>
-        <th scope="col" th:text="#{list.items.plans.name}">Plan</th>
-        <th scope="col" th:text="#{list.items.plans.price}">Price</th>
+        <th scope="col">
+            <a th:href="@{'/items/plans/page/' + ${currentPage} + '?sf=product&sd=' +${rsd}}" th:text="#{list.items.plans.product}">
+                Service
+            </a>
+        </th>
+        <th scope="col">
+            <a th:href="@{'/items/plans/page/' + ${currentPage} + '?sf=name&sd=' +${rsd}}" th:text="#{list.items.plans.name}">
+                Name
+            </a>
+        </th>
+        <th scope="col">
+            <a th:href="@{'/items/plans/page/' + ${currentPage} + '?sf=price&sd=' +${rsd}}" th:text="#{list.items.plans.price}">
+                Price
+            </a>
+        </th>
         <th scope="col"/>
     </tr>
     </thead>
@@ -52,6 +64,20 @@
     </tr>
     </tbody>
 </table>
-
-</body>
-</html>
+<div>
+    Total items: [[${totalItems}]] - Page [[${currentPage}]] of [[${totalPages}]] -
+    <a th:if="${currentPage > 1}" th:href="@{'/items/plans/page/1' + '?sf=' + ${sf} + '&sd=' + ${sd}}">First</a>
+    <span th:unless="${currentPage > 1}">First</span>
+    <a th:if="${currentPage > 1}" th:href="@{'/items/plans/page/' + ${currentPage - 1} + '?sf=' + ${sf} + '&sd=' + ${sd}}">Previous</a>
+    <span th:unless="${currentPage > 1}">Previous</span>
+        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+            <a th:if="${i != currentPage}" th:href="@{'/items/plans/page/' + ${i} + '?sf=' + ${sf} + '&sd=' + ${sd}}">[[${i}]]</a>
+            <span th:unless="${i != currentPage}">[[${i}]]</span>
+        </span>
+    <a th:if="${currentPage < totalPages}" th:href="@{'/items/plans/page/' + ${currentPage + 1} + '?sf=' + ${sf} + '&sd=' + ${sd}}">Next</a>
+    <span th:unless="${currentPage < totalPages}">Next</span>
+    <a th:if="${currentPage < totalPages}" th:href="@{'/items/plans/page/' + ${totalPages} + '?sf=' + ${sf} + '&sd=' + ${sd}}">Last</a>
+    <span th:unless="${currentPage < totalPages}">Last</span>
+    </div>
+    </body>
+    </html>
