@@ -1,12 +1,12 @@
 package my.project.internetprovider.controllers;
 
 import my.project.internetprovider.models.Plan;
-import my.project.internetprovider.models.Product;
 import my.project.internetprovider.models.User;
-import my.project.internetprovider.services.ProductService;
 import my.project.internetprovider.services.PlanService;
 import my.project.internetprovider.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import javax.validation.Valid;
-import java.security.Principal;
-import java.util.List;
+import java.awt.print.Pageable;
 
 @Controller
 @RequestMapping("/items")

@@ -12,7 +12,6 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 @Configuration
 @ComponentScan("my.project.internetprovider")
-//@EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");

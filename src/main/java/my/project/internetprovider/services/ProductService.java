@@ -1,12 +1,10 @@
 package my.project.internetprovider.services;
 
-import my.project.internetprovider.models.Plan;
 import my.project.internetprovider.models.Product;
 import my.project.internetprovider.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 

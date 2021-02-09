@@ -107,9 +107,4 @@ public class PlanService {
 
         return modelAttributes;
     }
-
-//    @Override
-//    public Page<Plan> findAll(Pageable pageable) {
-//        return planRepository.findAll(pageable);
-//    }
 }

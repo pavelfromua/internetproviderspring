@@ -15,16 +15,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -81,7 +78,7 @@ public class UserService implements UserDetailsService {
 
         if (userFromDB == null)
             return false;
-            //log here            "user with id " + id + " does not exists"));
+            //log here
 
         userFromDB.setName(user.getName());
         userFromDB.setEmail(user.getEmail());
@@ -97,8 +94,6 @@ public class UserService implements UserDetailsService {
 
         if (!isExists)
             return false;
-            //throw new IllegalStateException("user with id " + id
-            //        + " does not exists");
 
         userRepository.deleteById(id);
 

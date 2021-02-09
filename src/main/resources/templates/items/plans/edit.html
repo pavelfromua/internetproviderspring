@@ -7,11 +7,7 @@
 <body>
 
 <div th:insert="~{common :: header}"/>
-<div th:switch="${user_role}">
-    <div th:case="'ROLE_ADMIN'" th:insert="~{common :: admin_nav}"/>
-    <div th:case="'ROLE_USER'" th:insert="~{common :: cabinet_nav}"/>
-    <div th:case="*" th:insert="~{common :: main_nav}"/>
-</div>
+<div th:insert="~{common :: admin_nav}"/>
 
 <div class="container" style="width: 50%">
     <form th:method="PATCH" th:action="@{/items/plans/{id}(id=${plan.id})}" th:object="${plan}">

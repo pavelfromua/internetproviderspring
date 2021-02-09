@@ -16,10 +16,10 @@
 <div class="row">
     <div class="col-3">
         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-            <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">Profile</a>
-            <a class="nav-link" id="v-pills-plans-tab" data-toggle="pill" href="#v-pills-plans" role="tab" aria-controls="v-pills-plans" aria-selected="false">Plans</a>
-            <a class="nav-link" id="v-pills-payments-tab" data-toggle="pill" href="#v-pills-payments" role="tab" aria-controls="v-pills-payments" aria-selected="false">Payments</a>
-            <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
+            <a th:text="#{cabinet.menu.profile}" class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="true">Profile</a>
+            <a th:text="#{cabinet.menu.plans}" class="nav-link" id="v-pills-plans-tab" data-toggle="pill" href="#v-pills-plans" role="tab" aria-controls="v-pills-plans" aria-selected="false">Plans</a>
+            <a th:text="#{cabinet.menu.payments}" class="nav-link" id="v-pills-payments-tab" data-toggle="pill" href="#v-pills-payments" role="tab" aria-controls="v-pills-payments" aria-selected="false">Payments</a>
+            <a th:text="#{cabinet.menu.settings}" class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
         </div>
     </div>
     <div class="col-9">
@@ -47,7 +47,7 @@
                 </form>
             </div>
             <div class="tab-pane fade" id="v-pills-plans" role="tabpanel" aria-labelledby="v-pills-plans-tab">
-                <div th:if="${user.account.active == false}" th:text="|Your account is disabled. Check you balance|" class="alert alert-info" role="alert" />
+                <div th:if="${user.account.active == false}" th:text="#{cabinet.account.status.message}" class="alert alert-info" role="alert" />
                 <ul class="list-group" th:each="product: ${products}">
                     <li  class="list-group-item d-flex justify-content-between align-items-center">
                         <span th:text="${product.description}" />
@@ -58,34 +58,28 @@
                 </ul>
             </div>
             <div class="tab-pane fade" id="v-pills-payments" role="tabpanel" aria-labelledby="v-pills-payments-tab">
-                <div th:if="${user.account.active == false}" th:text="|Your account is disabled. Check you balance|" class="alert alert-info" role="alert" />
+                <div th:if="${user.account.active == false}" th:text="#{cabinet.account.status.message}" class="alert alert-info" role="alert" />
                 <table width="100%">
                     <tr><td>
                         <form th:method="POST" modelAttribute="dataform" th:action="@{/acc/pay}" class="form-inline">
-                            <div class="form-group mb-2">
-                                Amount to pay
-                            </div>
-                            <div class="form-group mx-sm-3 mb-2">
+                            <div th:text="#{cabinet.menu.payments.menupay.label}" class="form-group mb-2">Amount to pay</div>
                                 <input type="hidden" id="uid" name="uid" th:value="${user.id}">
                                 <input type="hidden" id="aid" name="aid" th:value="${user.account.id}">
 
                                 <input type="number" name="amount" class="form-control" min="0" value="0" step="0.01">
                             </div>
-                            <button type="submit" class="btn btn-primary mb-2">Pay</button>
+                            <button th:text="#{cabinet.menu.payments.menupay.btn}" type="submit" class="btn btn-primary mb-2">Pay</button>
                         </form>
                     </td></tr>
-                    <tr><td th:text="|Balance: ${balance}|"></td></tr>
+                    <tr><td th:text="|#{cabinet.menu.payments.balance}: ${balance}|"></td></tr>
                 </table>
                 <table class="table table-hover">
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col" >Name</th>
-                        <th scope="col" >Amount</th>
-                        <th scope="col" >Date</th>
-<!--                        <th scope="col" th:text="#{list.users.username}">Login</th>-->
-<!--                        <th scope="col" th:text="#{list.users.name}">Name</th>-->
-<!--                        <th scope="col" th:text="#{list.users.email}">Email</th>-->
+                        <th th:text="#{cabinet.menu.payments.history.name}" scope="col" >Name</th>
+                        <th th:text="#{cabinet.menu.payments.history.amount}" scope="col" >Amount</th>
+                        <th th:text="#{cabinet.menu.payments.history.date}" scope="col" >Date</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -99,34 +93,23 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-                <span th:if="${user.account.active == true}" th:text="Enabled" class="badge badge-pill badge-success">Enabled</span>
-                <span th:if="${user.account.active == false}" th:text="Disabled" class="badge badge-pill badge-danger">Disabled</span>
+                <span th:if="${user.account.active == true}" th:text="#{cabinet.account.status.active}" class="badge badge-pill badge-success">Enabled</span>
+                <span th:if="${user.account.active == false}" th:text="#{cabinet.account.status.inactive}" class="badge badge-pill badge-danger">Disabled</span>
                 <form th:if="${user_role == 'ROLE_ADMIN'}" th:method="POST" modelAttribute="dataform" th:action="@{/acc/status}" class="form-inline">
                     <input type="hidden" name="uid" th:value="${user.id}">
                     <input type="hidden" name="aid" th:value="${user.account.id}">
                     <div class="form-check form-check-inline">
-                        <input th:checked="${user.account.active == true}" class="form-check-input" type="radio" name="as" id="inlineRadio1" value=true>
-                        <label class="form-check-label" for="inlineRadio1">Enable</label>
+                        <input th:checked="${user.account.active == true}" th:text="#{cabinet.menu.settings.activate}" class="form-check-input" type="radio" name="as" id="inlineRadio1" value=true>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input th:checked="${user.account.active == false}" class="form-check-input" type="radio" name="as" id="inlineRadio2" value=false>
-                        <label class="form-check-label" for="inlineRadio2">Disable</label>
+                        <input th:checked="${user.account.active == false}" th:text="#{cabinet.menu.settings.deactivate}" class="form-check-input" type="radio" name="as" id="inlineRadio2" value=false>
                     </div>
-                    <button type="submit" class="btn btn-primary mb-2">Set</button>
+                    <button th:text="#{cabinet.menu.settings.set}" type="submit" class="btn btn-primary mb-2">Set</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-
-
-
-
-<!--<a th:href="@{/users/{id}/edit(id=${user.id})}">Edit</a>-->
-
-<!--<form th:method="DELETE" th:action="@{/users/{id}(id=${user.id})}">-->
-<!--    <input type="submit" value="Delete"/>-->
-<!--</form>-->
 </body>
 </html>

@@ -16,14 +16,10 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.security.Principal;
 
 @Controller
 @RequestMapping("/users")
-//@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
     private final UserService userService;
 
