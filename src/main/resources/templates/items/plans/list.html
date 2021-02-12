@@ -11,14 +11,7 @@
     <div th:case="'ROLE_USER'" th:insert="~{common :: cabinet_nav}"/>
     <div th:case="*" th:insert="~{common :: main_nav}"/>
 </div>
-
-
-<select name="pid" class="custom-select" onchange="top.location=this.value" th:field="*{products}">
-    <option value="none" hidden="" th:text="#{list.items.plans.filter.product}">Filter by product</option>
-    <option selected th:value="@{/items/plans}" th:text="#{list.items.plans.filter.product.all}">All</option>
-    <option th:each="item : ${products}" th:text="${item.name}" th:value="@{|/items/plans/pid/${item.id}|}" />
-</select>
-
+<a th:href="@{/items/plans/export/pdf}" th:text="#{utils.export.pdf}">Export to PDF</a>
 <table class="table table-hover">
     <thead>
     <tr>
@@ -65,19 +58,27 @@
     </tbody>
 </table>
 <div>
-    Total items: [[${totalItems}]] - Page [[${currentPage}]] of [[${totalPages}]] -
-    <a th:if="${currentPage > 1}" th:href="@{'/items/plans/page/1' + '?sf=' + ${sf} + '&sd=' + ${sd}}">First</a>
-    <span th:unless="${currentPage > 1}">First</span>
-    <a th:if="${currentPage > 1}" th:href="@{'/items/plans/page/' + ${currentPage - 1} + '?sf=' + ${sf} + '&sd=' + ${sd}}">Previous</a>
-    <span th:unless="${currentPage > 1}">Previous</span>
-        <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+    <table>
+        <tr>
+            <td th:text="|#{pagination.items}: ${totalItems} - #{pagination.page} ${currentPage} #{pagination.of} ${totalPages} -|"/>
+            <td>
+                <a th:if="${currentPage > 1}" th:text="#{pagination.first}" th:href="@{'/items/plans/page/1' + '?sf=' + ${sf} + '&sd=' + ${sd}}">First</a>
+                <span th:unless="${currentPage > 1}" th:text="#{pagination.first}">First</span>
+                <a th:if="${currentPage > 1}" th:text="#{pagination.previous}" th:href="@{'/items/plans/page/' + ${currentPage - 1} + '?sf=' + ${sf} + '&sd=' + ${sd}}">Previous</a>
+                <span th:unless="${currentPage > 1}" th:text="#{pagination.previous}">Previous</span>
+                <span th:each="i: ${#numbers.sequence(1, totalPages)}">
             <a th:if="${i != currentPage}" th:href="@{'/items/plans/page/' + ${i} + '?sf=' + ${sf} + '&sd=' + ${sd}}">[[${i}]]</a>
             <span th:unless="${i != currentPage}">[[${i}]]</span>
         </span>
-    <a th:if="${currentPage < totalPages}" th:href="@{'/items/plans/page/' + ${currentPage + 1} + '?sf=' + ${sf} + '&sd=' + ${sd}}">Next</a>
-    <span th:unless="${currentPage < totalPages}">Next</span>
-    <a th:if="${currentPage < totalPages}" th:href="@{'/items/plans/page/' + ${totalPages} + '?sf=' + ${sf} + '&sd=' + ${sd}}">Last</a>
-    <span th:unless="${currentPage < totalPages}">Last</span>
+                <a th:if="${currentPage < totalPages}" th:text="#{pagination.next}" th:href="@{'/items/plans/page/' + ${currentPage + 1} + '?sf=' + ${sf} + '&sd=' + ${sd}}">Next</a>
+                <span th:unless="${currentPage < totalPages}" th:text="#{pagination.next}">Next</span>
+                <a th:if="${currentPage < totalPages}" th:text="#{pagination.last}" th:href="@{'/items/plans/page/' + ${totalPages} + '?sf=' + ${sf} + '&sd=' + ${sd}}">Last</a>
+                <span th:unless="${currentPage < totalPages}" th:text="#{pagination.last}">Last</span>
+            </td>
+        </tr>
+    </table>
+
+
     </div>
     </body>
     </html>

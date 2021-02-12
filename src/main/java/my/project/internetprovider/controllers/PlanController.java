@@ -1,9 +1,11 @@
 package my.project.internetprovider.controllers;
 
+import com.lowagie.text.DocumentException;
 import my.project.internetprovider.models.Plan;
 import my.project.internetprovider.models.User;
 import my.project.internetprovider.services.PlanService;
 import my.project.internetprovider.services.UserService;
+import my.project.internetprovider.utils.PlanPDFExporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -21,10 +23,18 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.awt.print.Pageable;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/items")
@@ -49,9 +59,8 @@ public class PlanController {
                              @Param("sf") String sf,
                              @Param("sd") String sd,
                              @AuthenticationPrincipal User authUser) {
-        Map<String, ?> planPageData = planService.getDataForListOfPlans(currentPage, sf, sd);
+        Page<Plan> page = planService.getPlans(currentPage, sf, sd);
 
-        Page<Plan> page = (Page<Plan>) planPageData.get("planPage");
         long totalItems = page.getTotalElements();
         int totalPages = page.getTotalPages();
 
@@ -65,7 +74,6 @@ public class PlanController {
         model.addAttribute("sd", sd);
         model.addAttribute("rsd", rsd);
         model.addAttribute("plans", planList);
-        model.addAttribute("products", planPageData.get("products"));
         model.addAttribute("user_role", userService.getRoleForUser(authUser));
 
         return "items/plans/list";
@@ -124,5 +132,21 @@ public class PlanController {
         planService.deletePlan(id);
 
         return "redirect:/items/plans";
+    }
+
+    @GetMapping("/plans/export/pdf")
+    public void exportToPDF(HttpServletResponse response) throws DocumentException, IOException {
+        response.setContentType("application/pdf");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=plans_" + currentDateTime + ".pdf";
+        response.setHeader(headerKey, headerValue);
+
+        List<Plan> listPlans = planService.getPlans();
+
+        PlanPDFExporter exporter = new PlanPDFExporter(listPlans);
+        exporter.export(response);
     }
 }

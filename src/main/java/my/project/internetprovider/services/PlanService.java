@@ -1,6 +1,5 @@
 package my.project.internetprovider.services;
 
-
 import my.project.internetprovider.models.Plan;
 import my.project.internetprovider.models.Product;
 import my.project.internetprovider.repositories.ProductRepository;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +38,10 @@ public class PlanService {
         Pageable pageable = PageRequest.of(pageNumber - 1, 2, sort);
 
         return planRepository.findAll(pageable);
+    }
+
+    public List<Plan> getPlans() {
+        return planRepository.findAll();
     }
 
     public Plan getPlanById(Long id) {
@@ -82,16 +84,6 @@ public class PlanService {
     @Transactional
     public List<Product> getProducts() {
         return productRepository.findAll();
-    }
-
-    @Transactional
-    public Map<String, ?> getDataForListOfPlans(int currentPage, String sortField, String sortDir) {
-        Map<String, Object> planPageData = new HashMap<>();
-
-        planPageData.put("products", getProducts());
-        planPageData.put("planPage", getPlans(currentPage, sortField, sortDir));
-
-        return planPageData;
     }
 
     @Transactional

@@ -61,7 +61,6 @@ public class UserService implements UserDetailsService {
         User userFromDB = userRepository.findByUsername(user.getUsername());
         if (userFromDB != null) {
             return false;
-            //log here
         }
 
         user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
@@ -78,7 +77,6 @@ public class UserService implements UserDetailsService {
 
         if (userFromDB == null)
             return false;
-            //log here
 
         userFromDB.setName(user.getName());
         userFromDB.setEmail(user.getEmail());
@@ -119,15 +117,16 @@ public class UserService implements UserDetailsService {
         List<Product> products = productRepository.findAll();
         Set<Plan> plans = user.getAccount().getPlans();
         AccountProductPlanDto accProductPlanDto;
+        Plan planDummy = new Plan();
+        planDummy.setName("not assigned");
 
         List<AccountProductPlanDto> listProductPlan = new ArrayList<>();
         for (Product product: products) {
             accProductPlanDto = new AccountProductPlanDto();
             accProductPlanDto.setProduct(product);
             accProductPlanDto.setPlan(plans.stream().filter(plan -> plan.getProduct() == product)
-            .findFirst().orElse(null));
-            accProductPlanDto.setDescription(product + ": "
-                    + (accProductPlanDto.getPlan() == null ? " not assigned" : accProductPlanDto.getPlan()));
+            .findFirst().orElse(planDummy));
+            accProductPlanDto.setDescription(product + ": " + accProductPlanDto.getPlan());
 
             listProductPlan.add(accProductPlanDto);
         }

@@ -40,8 +40,8 @@
         <input type="hidden" id="uid" name="uid" th:value="${uid}">
         <input type="hidden" id="aid" name="aid" th:value="${aid}">
         <input type="hidden" id="pid" name="pid" th:value="${pid}">
-        <button type="submit" class="btn btn-primary" name="btnValue" value="assign">Assign</button>
-        <button type="submit" class="btn btn-primary" name="btnValue" value="cancel">Cancel</button>
+        <button th:text="#{item.plan.assign}" type="submit" class="btn btn-primary" name="btnValue" value="assign">Assign</button>
+        <button th:text="#{item.plan.cancel}" type="submit" class="btn btn-primary" name="btnValue" value="cancel">Cancel</button>
     </div>
 </form>
 </body>
