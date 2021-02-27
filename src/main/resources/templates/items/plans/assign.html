@@ -23,10 +23,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="plan: ${plans}">
+                <tr th:each="plan, index: ${plans}">
                     <td>
                         <div class="radio">
-                            <input th:checked="${plid == plan.id}" type="radio" name="plan" th:value="${plan.id}">
+                            <input th:checked="${plid == plan.id || index.count == 1}" type="radio" name="plan" th:value="${plan.id}">
                         </div>
                     </td>
                     <td><p th:text="${plan.name}" /></td>

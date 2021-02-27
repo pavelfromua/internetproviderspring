@@ -1,5 +1,6 @@
 package my.project.internetprovider.services;
 
+import my.project.internetprovider.exception.DBException;
 import my.project.internetprovider.models.Plan;
 import my.project.internetprovider.models.Product;
 import my.project.internetprovider.repositories.ProductRepository;
@@ -28,8 +29,14 @@ public class PlanService {
         this.productRepository = productRepository;
     }
 
-    public void savePlan(Plan plan) {
-        planRepository.save(plan);
+    public void savePlan(Plan plan) throws DBException {
+        try {
+            planRepository.save(plan);
+        } catch (Exception e) {
+            throw new DBException("plan with id " + plan.getId()
+                    + " can't be saved into db", e);
+        }
+
     }
 
     public Page<Plan> getPlans(int pageNumber, String sortField, String sortDir) {
@@ -47,8 +54,7 @@ public class PlanService {
     public Plan getPlanById(Long id) {
         Optional<Plan> optionalPlan = planRepository.findById(id);
         if (!optionalPlan.isPresent())
-            return null;
-        //log
+            throw new IllegalStateException("plan with id " + id + " does not exists");
 
         return optionalPlan.get();
     }
@@ -66,14 +72,19 @@ public class PlanService {
         planRepository.save(planFromDb);
     }
 
-    public void deletePlan(Long id) {
+    public void deletePlan(Long id) throws DBException {
         boolean isExists = planRepository.existsById(id);
 
         if (!isExists)
             throw new IllegalStateException("plan with id " + id
                     + " does not exists");
 
-        planRepository.deleteById(id);
+       try {
+            planRepository.deleteById(id);
+       } catch (Exception e) {
+            throw new DBException("plan with id " + id
+                    + " can't be deleted because of using in other entities", e);
+       }
     }
 
     @Transactional

@@ -3,9 +3,7 @@ package my.project.internetprovider.utils;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
-
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import my.project.internetprovider.models.Plan;

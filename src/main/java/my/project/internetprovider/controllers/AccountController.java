@@ -1,5 +1,6 @@
 package my.project.internetprovider.controllers;
 
+import my.project.internetprovider.models.Plan;
 import my.project.internetprovider.services.AccountService;
 import my.project.internetprovider.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/acc")
@@ -31,7 +34,15 @@ public class AccountController {
                                    @PathVariable("aid") Long accountId,
                                    @PathVariable("pid") Long productId,
                                    @ModelAttribute("plid") Long planId) {
-        model.addAttribute("plans", accountService.getPlansByProductId(productId));
+
+        List<Plan> plans = accountService.getPlansByProductId(productId);
+        if (plans.size() == 0) {
+            model.addAttribute("uid", userId);
+
+            return "items/plans/noassign";
+        }
+
+        model.addAttribute("plans", plans);
         model.addAttribute("uid", userId);
         model.addAttribute("aid", accountId);
         model.addAttribute("pid", productId);
@@ -46,13 +57,13 @@ public class AccountController {
                          @ModelAttribute("uid") Long userId,
                          @ModelAttribute("aid") Long accountId,
                          @ModelAttribute("pid") Long productId,
-
                          BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             return "redirect:/users/" + String.format("/acc/plans/%s/%s/%s/%s", userId, accountId, productId, planId);
         }
 
-        if ("assign".equals(btnValue))
+        if ("assign".equals(btnValue) && planId > 0)
             accountService.assignPlanToAccount(accountId, planId);
 
         return "redirect:/users/" + userId;

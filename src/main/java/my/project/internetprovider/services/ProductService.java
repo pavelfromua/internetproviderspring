@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -26,19 +25,18 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        if (!optionalProduct.isPresent())
-            return null;
-            //log
+        Product productFromDb = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException(
+                        "product with id " + id + " does not exists"));
 
-        return optionalProduct.get();
+        return productFromDb;
     }
 
     @Transactional
     public void updateProduct(Product product) {
         Product productFromDb = productRepository.findById(product.getId())
                 .orElseThrow(() -> new IllegalStateException(
-                        "plan with id " + product.getId() + " does not exists"));
+                        "product with id " + product.getId() + " does not exists"));
 
         productFromDb.setName(product.getName());
 

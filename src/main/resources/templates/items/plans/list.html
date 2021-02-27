@@ -12,6 +12,7 @@
     <div th:case="*" th:insert="~{common :: main_nav}"/>
 </div>
 <a th:href="@{/items/plans/export/pdf}" th:text="#{utils.export.pdf}">Export to PDF</a>
+<div th:text="${errorMessage}" />
 <table class="table table-hover">
     <thead>
     <tr>

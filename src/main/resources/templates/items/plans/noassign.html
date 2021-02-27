@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <div th:insert="~{common :: headlink}"/>
+</head>
+<body>
+<div th:insert="~{common :: header}"/>
+<div th:switch="${user_role}">
+    <div th:case="'ROLE_ADMIN'" th:insert="~{common :: admin_nav}"/>
+    <div th:case="'ROLE_USER'" th:insert="~{common :: cabinet_nav}"/>
+    <div th:case="*" th:insert="~{common :: main_nav}"/>
+</div>
+<div class="container" width="30%">
+<div th:text="#{item.plan.msgNothingToAssign}" class="alert alert-info" role="alert" />
+<a class="btn btn-primary" th:href="@{/users/{id}(id=${uid})}" role="button" th:text="#{item.plan.noassign}">Back to user cabinet</a>
+</div>
+</body>
+</html>

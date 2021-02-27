@@ -1,6 +1,8 @@
 package my.project.internetprovider.services;
 
+import my.project.internetprovider.exception.DBException;
 import my.project.internetprovider.models.Account;
+import my.project.internetprovider.models.Payment;
 import my.project.internetprovider.models.Plan;
 import my.project.internetprovider.models.Product;
 import my.project.internetprovider.models.User;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +43,11 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user == null)
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (!userOptional.isPresent())
             throw new UsernameNotFoundException("Unknown user: "+username);
 
-        return user;
+        return userOptional.get();
     }
 
     public User findUserById(Long userId) {
@@ -57,44 +60,37 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public boolean saveUser(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
-        if (userFromDB != null) {
-            return false;
+    public void saveUser(User user) throws DBException {
+        try {
+            user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
+            user.setAccount(Account.newBuilder().setActive(true).build());
+
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new DBException("user with login " + user.getUsername() +
+                    " can't be saved into db", e);
         }
-
-        user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
-        user.setAccount(Account.newBuilder().setActive(true).build());
-
-        userRepository.save(user);
-
-        return true;
     }
 
     @Transactional
-    public boolean updateUser(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
+    public void updateUser(User user) {
+        Optional<User> optionalUser = userRepository.findByUsername(user.getUsername());
+        if (optionalUser.isPresent()) {
+            User userFromDB = optionalUser.get();
+            userFromDB.setName(user.getName());
+            userFromDB.setEmail(user.getEmail());
+            userFromDB.setPassword(user.getPassword());
 
-        if (userFromDB == null)
-            return false;
-
-        userFromDB.setName(user.getName());
-        userFromDB.setEmail(user.getEmail());
-        userFromDB.setPassword(user.getPassword());
-
-        userRepository.save(userFromDB);
-
-        return true;
+            userRepository.save(userFromDB);
+        }
     }
 
+    @Transactional
     public boolean deleteUser(Long id) {
-        boolean isExists = userRepository.existsById(id);
-
-        if (!isExists)
+       if (!userRepository.existsById(id))
             return false;
 
         userRepository.deleteById(id);
-
         return true;
     }
 
@@ -114,11 +110,14 @@ public class UserService implements UserDetailsService {
         Map<String, Object> modelAttributes = new HashMap<>();
 
         User user = findUserById(userId);
+        Account account = user.getAccount();
+
         List<Product> products = productRepository.findAll();
         Set<Plan> plans = user.getAccount().getPlans();
         AccountProductPlanDto accProductPlanDto;
         Plan planDummy = new Plan();
         planDummy.setName("not assigned");
+        planDummy.setId(0L);
 
         List<AccountProductPlanDto> listProductPlan = new ArrayList<>();
         for (Product product: products) {
@@ -131,7 +130,11 @@ public class UserService implements UserDetailsService {
             listProductPlan.add(accProductPlanDto);
         }
 
+        List sortedPayments = new ArrayList(account.getPayments());
+        Collections.sort(sortedPayments, (Comparator<Payment>) (one, other) -> other.getDate().compareTo(one.getDate()));
+
         modelAttributes.put("user", user);
+        modelAttributes.put("payments", sortedPayments);
         modelAttributes.put("products", listProductPlan);
         modelAttributes.put("balance", paymentRepository.getBalanceByAccount(user.getAccount()));
 

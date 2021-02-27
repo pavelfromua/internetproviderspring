@@ -1,5 +1,6 @@
 package my.project.internetprovider.controllers;
 
+import my.project.internetprovider.exception.DBException;
 import my.project.internetprovider.models.User;
 import my.project.internetprovider.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,9 @@ public class UserController {
             return "users/new";
         }
 
-        if (!userService.saveUser(user)) {
+        try {
+            userService.saveUser(user);
+        } catch (DBException e) {
             FieldError fieldError = new FieldError("user","username","new.user.login.isTaken");
             bindingResult.addError(fieldError);
 
